@@ -1,0 +1,494 @@
+# 🧠 Embedded Systems – Interrupts
+
+Interrupts are one of the most important concepts in embedded systems. Instead of continuously checking for events (polling), interrupts allow the CPU to immediately respond when an important event occurs, making embedded systems faster, more efficient, and responsive.
+
+---
+
+# 📌 What is an Interrupt?
+
+An **interrupt** is a signal that temporarily pauses the CPU's current task so it can immediately handle an important event through an **Interrupt Service Routine (ISR)**. Once the ISR finishes, the CPU resumes the previous task from where it stopped.
+
+Think of it like answering a phone call while studying—you briefly pause your work, answer the call, then continue studying.
+
+---
+
+# 📌 Why Interrupts are Needed
+
+Without interrupts, the CPU must constantly check peripherals:
+
+```
+Button?
+Button?
+Button?
+Button?
+```
+
+This is called **polling** and wastes CPU time.
+
+With interrupts:
+
+```
+CPU Doing Work
+       │
+       ▼
+Interrupt Occurs
+       │
+       ▼
+Handle Event
+       │
+       ▼
+Resume Previous Work
+```
+
+Benefits:
+
+- Faster response to events
+- Better CPU utilization
+- Improved real-time performance
+- Reduced unnecessary polling
+
+---
+
+# 📌 Interrupt Flow
+
+```
+CPU Running
+      │
+      ▼
+Interrupt Occurs
+      │
+      ▼
+Save CPU State
+      │
+      ▼
+Execute ISR
+      │
+      ▼
+Restore CPU State
+      │
+      ▼
+Resume Previous Task
+```
+
+Typical CPU state saved:
+
+- Program Counter (PC)
+- Status Register
+- CPU working registers (implementation dependent)
+
+The saved context is usually stored on the **stack**.
+
+---
+
+# 📌 Hardware Blocks Involved
+
+```
+External Device
+       │
+       ▼
+Peripheral
+       │
+       ▼
+Interrupt Controller
+       │
+       ▼
+CPU
+       │
+       ▼
+Stack
+       │
+       ▼
+Interrupt Service Routine (ISR)
+```
+
+Peripherals such as GPIO, Timers, UART, ADC, SPI, I²C, and CAN generate interrupt requests, which are managed by the interrupt controller before reaching the CPU.
+
+---
+
+# 📌 Interrupt Controller
+
+The interrupt controller:
+
+- Receives interrupt requests from peripherals
+- Determines whether the interrupt is enabled
+- Notifies the CPU
+- Helps the CPU jump to the correct ISR
+
+---
+
+# 📌 Interrupt Service Routine (ISR)
+
+An **ISR (Interrupt Service Routine)** is a special function executed automatically when an interrupt occurs.
+
+Typical ISR tasks:
+
+- Read sensor data
+- Clear interrupt flags
+- Process received data
+- Update counters
+- Trigger further actions
+
+After completion, the CPU resumes normal execution.
+
+---
+
+# 📌 Interrupt Vector Table
+
+The **Interrupt Vector Table** is stored in **Flash memory**.
+
+It contains the addresses of all ISRs.
+
+```
+Flash Memory
+      │
+      ▼
+Interrupt Vector Table
+      │
+      ▼
+ISR Address
+```
+
+When an interrupt occurs:
+
+```
+Interrupt
+      │
+      ▼
+CPU Reads Vector Table
+      │
+      ▼
+Jump to ISR
+```
+
+---
+
+# 📌 Register-Level Overview
+
+Interrupts are controlled using memory-mapped registers.
+
+### Interrupt Enable Register
+
+Controls whether an interrupt is allowed.
+
+```
+Enabled
+Disabled
+```
+
+---
+
+### Interrupt Status Register
+
+Indicates whether an interrupt is pending or has occurred.
+
+---
+
+### Interrupt Flag Register
+
+Stores which peripheral generated the interrupt.
+
+Examples:
+
+- GPIO Interrupt
+- Timer Interrupt
+- UART Interrupt
+
+---
+
+# 🚗 Embedded / Automotive Applications
+
+Interrupts are used extensively in automotive ECUs.
+
+### Wheel Speed Sensor (ABS)
+
+```
+Wheel Rotation
+      │
+      ▼
+Wheel Sensor
+      │
+      ▼
+Interrupt
+      │
+      ▼
+CPU
+      │
+      ▼
+ABS Calculation
+```
+
+---
+
+### Airbag System
+
+```
+Crash Sensor
+      │
+      ▼
+Interrupt
+      │
+      ▼
+CPU
+      │
+      ▼
+Deploy Airbag
+```
+
+---
+
+### UART Communication
+
+```
+Diagnostic Tool
+      │
+      ▼
+UART
+      │
+      ▼
+Receive Interrupt
+      │
+      ▼
+CPU
+```
+
+---
+
+### CAN Communication
+
+```
+CAN Controller
+      │
+      ▼
+Interrupt
+      │
+      ▼
+CPU
+```
+
+---
+
+### Timer Interrupt
+
+Used for:
+
+- Periodic tasks
+- Control loops
+- Time measurement
+- Scheduling
+
+---
+
+# 📌 Common Interrupt Sources
+
+### GPIO
+
+- Button press
+- Door switch
+- External signals
+
+### Timer
+
+- Periodic interrupts
+- Timeouts
+
+### UART
+
+- Data received
+- Transmission complete
+
+### ADC
+
+- Conversion complete
+
+### SPI / I²C
+
+- Data transfer complete
+
+### CAN
+
+- Message received
+- Transmission complete
+
+---
+
+# 📌 Interrupt vs Polling
+
+### Polling
+
+```
+CPU
+ │
+ ▼
+Check
+ │
+ ▼
+Check
+ │
+ ▼
+Check
+```
+
+- CPU continuously checks peripherals
+- Wastes CPU time
+- Slower response
+
+---
+
+### Interrupt
+
+```
+CPU Working
+      │
+      ▼
+Interrupt Occurs
+      │
+      ▼
+ISR
+      │
+      ▼
+Resume Program
+```
+
+- Peripheral notifies CPU
+- Efficient
+- Faster response
+
+---
+
+# 📌 Interrupt vs Exception
+
+| Interrupt | Exception |
+|-----------|-----------|
+| Usually triggered by hardware | Usually generated by the CPU |
+| Examples: GPIO, UART, Timer | Examples: Divide by zero, Invalid instruction, Memory fault |
+
+---
+
+# 🚗 Automotive Relevance
+
+Interrupts are essential for:
+
+- Wheel speed sensing (ABS)
+- Airbag deployment
+- Engine control
+- CAN communication
+- Diagnostic communication
+- Encoder pulse counting
+- Emergency stop detection
+
+Most automotive ECUs rely heavily on interrupts for real-time operation.
+
+---
+
+# 🎯 Interview Questions
+
+### What is an interrupt?
+
+An interrupt is a signal that temporarily pauses normal CPU execution so the CPU can immediately service an important event.
+
+---
+
+### Why are interrupts used?
+
+To respond quickly to external or internal events without continuously polling peripherals.
+
+---
+
+### What is an ISR?
+
+An Interrupt Service Routine (ISR) is the function executed when an interrupt occurs.
+
+---
+
+### What happens during an interrupt?
+
+1. CPU saves its current state.
+2. CPU jumps to the ISR.
+3. ISR handles the event.
+4. CPU restores the saved state.
+5. CPU resumes the interrupted program.
+
+---
+
+### What is an Interrupt Vector Table?
+
+A table stored in Flash memory that contains the addresses of all Interrupt Service Routines.
+
+---
+
+### Why are interrupts better than polling?
+
+Interrupts improve CPU efficiency because the CPU performs useful work until an event occurs instead of continuously checking peripherals.
+
+---
+
+### Can multiple peripherals generate interrupts?
+
+Yes. Peripherals such as GPIO, Timer, UART, ADC, SPI, I²C, and CAN can all generate interrupt requests.
+
+---
+
+### Where is an ISR stored?
+
+Inside Flash memory as part of the program code.
+
+---
+
+### What does the CPU save before entering an ISR?
+
+Typically:
+
+- Program Counter (PC)
+- Status Register
+- CPU working registers (implementation dependent)
+
+These are usually saved on the stack.
+
+---
+
+# ⚠️ Common Mistakes
+
+❌ Thinking interrupts permanently stop the program.
+
+Interrupts only pause execution temporarily.
+
+---
+
+❌ Thinking interrupts restart the program.
+
+The CPU resumes exactly where it left off after the ISR completes.
+
+---
+
+❌ Confusing interrupts with polling.
+
+Polling continuously checks for events, while interrupts notify the CPU only when an event occurs.
+
+---
+
+❌ Confusing interrupts with exceptions.
+
+Interrupts are generally generated by hardware peripherals, whereas exceptions are generated by the CPU due to internal conditions.
+
+---
+
+❌ Assuming interrupts directly control actuators.
+
+Interrupts notify the CPU. The CPU then controls peripherals such as GPIO or PWM, which drive the actuators.
+
+---
+
+# 📝 Key Takeaways
+
+- Interrupts allow the CPU to respond immediately to important events.
+- They improve efficiency by eliminating constant polling.
+- The CPU saves its current state before executing the ISR.
+- After the ISR finishes, the CPU restores its state and resumes execution.
+- ISRs are located using the Interrupt Vector Table stored in Flash memory.
+- Interrupts are fundamental to real-time embedded and automotive systems.
+
+---
+
+# 🚀 One-Line Interview Answer
+
+An interrupt is a hardware or software signal that temporarily pauses normal CPU execution, saves the CPU state, executes an Interrupt Service Routine (ISR) to handle the event, and then restores the previous state so the program can continue from where it was interrupted.
