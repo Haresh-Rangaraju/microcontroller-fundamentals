@@ -9,7 +9,7 @@ A Microcontroller (MCU) is a compact computer integrated on a single chip that c
 * RAM
 * Peripherals (GPIO, UART, SPI, I2C, ADC, Timers, etc.)
 
-MCUs are designed to control embedded systems by reading inputs, processing data, and controlling outputs.
+MCUs are designed to control embedded s01 Introductionystems by reading inputs, processing data, and controlling outputs.
 
 ---
 
