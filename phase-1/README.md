@@ -1,4 +1,4 @@
-# Microcontroller Fundamentals
+# Microcontroller Fundamentals - Phase 1
 
 This repository contains notes and learning material related to microcontroller fundamentals.
 
